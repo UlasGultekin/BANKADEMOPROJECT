@@ -14,15 +14,15 @@ public class Represantive {
     private Long repId;
     private String name;
     private String surName;
+    private String password;
     private String email;
     private String tcNo;
-    private String ybNo;
     private String photo;
     private String phoneNo;
     private String contactAddres;
     private String represantiveType;
-    private String branchOffice;
-    private String topManager;
+    private Long branchOffice;
+    private Long topManager;
 
 
 
