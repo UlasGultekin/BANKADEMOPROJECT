@@ -12,7 +12,7 @@ public class CreditCard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cardId;
-    private String customer_id;
+    private Long customer_id;
     private String cardNo;
     private String cardStartDate;
     private String cardEndDate;
@@ -23,5 +23,6 @@ public class CreditCard {
     private String cardCurrentLimit;
     private String cutOffDate;
     private String lastPaymentDate;
+    private Boolean cardStatus;
 
 }

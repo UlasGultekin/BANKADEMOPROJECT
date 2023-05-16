@@ -10,5 +10,6 @@ public interface RepresantiveService {
     ResponseEntity<?> accountClosing(String tcNo,String password,String phoneNo);
     ResponseEntity<?> getAllCustomer();
     ResponseEntity<?> getCustomer(String cus);
+    ResponseEntity<?> getTopManager(Long repId);
 
 }

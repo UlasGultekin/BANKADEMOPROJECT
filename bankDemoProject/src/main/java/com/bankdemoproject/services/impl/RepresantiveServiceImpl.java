@@ -11,10 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Base64;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -24,9 +21,9 @@ public class RepresantiveServiceImpl implements RepresantiveService {
     @Override
     public ResponseEntity<?> accountAplication(Represantive represantive) {
         Map<REnum,Object> hashMap=new LinkedHashMap<>();
-        Optional<Represantive> hasCustomerTc=represantiveRepository.findByTcNo(represantive.getTcNo());
+        Optional<Represantive> hasRepresantiveTc=represantiveRepository.findByTcNo(represantive.getTcNo());
         try {
-            if (hasCustomerTc.isPresent()){
+            if (hasRepresantiveTc.isPresent()){
                 hashMap.put(REnum.status,false);
                 hashMap.put(REnum.message,"User already exists");
                 return new ResponseEntity<>(hashMap, HttpStatus.ALREADY_REPORTED);
@@ -85,15 +82,48 @@ public class RepresantiveServiceImpl implements RepresantiveService {
     @Override
     public ResponseEntity<?> getCustomer(String cus) {
         Map<REnum,Object> hashMap=new LinkedHashMap<>();
+try {
+    Optional<Customer> hasCustomerTc=customerRepository.findByTcNo(cus);
+    Optional<Customer> hasCustomerYb=customerRepository.findByYbNo(cus);
+    Optional<Customer> hasCustomerTax=customerRepository.findByTaxNo(cus);
+    if (hasCustomerTc.isPresent()||hasCustomerYb.isPresent()||hasCustomerTax.isPresent()){
+        List<Customer> customers=customerRepository.findByTcNoOrYbNoOrTaxNo(cus,cus,cus);
+        hashMap.put(REnum.status,true);
+        hashMap.put(REnum.result,customers);
+        return new ResponseEntity<>(hashMap, HttpStatus.ALREADY_REPORTED);
+    }else {
+        hashMap.put(REnum.status,false);
+        hashMap.put(REnum.message,"Not Exists");
+        return new ResponseEntity<>(hashMap,HttpStatus.NOT_FOUND);
+    }
+}catch (Exception e){
+    hashMap.put(REnum.status,false);
+    hashMap.put(REnum.message,e.getMessage());
+    return new ResponseEntity<>(hashMap,HttpStatus.BAD_REQUEST);
+}
 
-        Optional<Customer> hasCustomerTc=customerRepository.findByTcNo(cus);
-        Optional<Customer> hasCustomerYb=customerRepository.findByYbNo(cus);
-        Optional<Customer> hasCustomerTax=customerRepository.findByTaxNo(cus);
-        if (hasCustomerTc.isPresent()||hasCustomerYb.isPresent()||hasCustomerTax.isPresent()){
+    }
 
+    @Override
+    public ResponseEntity<?> getTopManager(Long repId) {
+        Map<REnum,Object> hashMap=new LinkedHashMap<>();
 
-            return new ResponseEntity<>(hashMap, HttpStatus.ALREADY_REPORTED);
+      try {
+        Represantive optionalRepresantive=represantiveRepository.findByRepIdEqualsAndTopManager(repId);
+        if (!(optionalRepresantive ==null)){
+       hashMap.put(REnum.status,true);
+       hashMap.put(REnum.result,optionalRepresantive);}
+        else {
+            hashMap.put(REnum.status,false);
+            hashMap.put(REnum.result,"Kayıt Bulunamadı");
+            return new ResponseEntity<>(hashMap,HttpStatus.BAD_REQUEST);
         }
-        return null;
+    }catch (Exception e){
+          hashMap.put(REnum.status,false);
+          hashMap.put(REnum.result,e.getMessage());
+          return new ResponseEntity<>(hashMap,HttpStatus.BAD_REQUEST);
+      }
+
+        return new ResponseEntity<>(hashMap,HttpStatus.OK);
     }
 }

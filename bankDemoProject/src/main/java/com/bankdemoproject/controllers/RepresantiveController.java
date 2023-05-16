@@ -29,5 +29,13 @@ public class RepresantiveController {
     public ResponseEntity getAllCustomer(){
         return represantiveService.getAllCustomer();
     }
+    @GetMapping("/get-customerDetail")
+    public ResponseEntity getCustomer(@RequestParam String cus){
+        return represantiveService.getCustomer(cus);
+    }
+    @GetMapping("/get-topManager")
+    public ResponseEntity getTopManager(Long repId){
+        return represantiveService.getTopManager(repId);
+    }
 
 }
